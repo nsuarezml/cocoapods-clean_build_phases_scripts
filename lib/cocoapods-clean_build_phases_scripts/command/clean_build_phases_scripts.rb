@@ -22,13 +22,19 @@ module Pod
       end
 
       def run
-        if !@xcodeproj_path 
-          @xcodeproj_path = Dir.glob("**/*.xcodeproj").first
+        if @xcodeproj_path 
+          clean(@xcodeproj_path)
+        else
+          projects = Dir.glob("**/*.xcodeproj")
+          projects.each do |project_path|
+            puts "Checking project #{project_path}"
+            clean(project_path)
+          end
         end
+      end
 
-        help! 'A xcodeproj file could not found.' unless @xcodeproj_path
-
-        xcode_project = Xcodeproj::Project.open(@xcodeproj_path)
+      def clean(project_path)
+        xcode_project = Xcodeproj::Project.open(project_path)
         xcode_project.targets.each do |target|
           phase_name = '[CP] Copy Pods Resources'
           target.shell_script_build_phases.select { |phase| phase.name && phase.name.end_with?(phase_name) }.each do |phase|
@@ -37,7 +43,7 @@ module Pod
                 phase.output_paths = []
           end
         end
-        xcode_project.save
+        xcode_project.save        
       end
 
     end

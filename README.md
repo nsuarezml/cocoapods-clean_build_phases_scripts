@@ -8,4 +8,4 @@ A description of cocoapods-clean_build_phases_scripts.
 
 ## Usage
 
-    $ pod spec clean_build_phases_scripts POD_NAME
+    $ pod clean-build-phases-scripts --xcodeproj=XCODEPROJ_PATH
